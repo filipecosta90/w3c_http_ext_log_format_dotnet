@@ -1,3 +1,6 @@
+
+// retrieved from https://github.com/Tratcher/CommonLog
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;

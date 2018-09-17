@@ -1,3 +1,5 @@
+// retrieved from https://github.com/Tratcher/CommonLog/tree/17c856962dcf346b789f73f9543db7a56ec50b77
+
 using System;
 using System.Collections.Generic;
 using System.IO;
