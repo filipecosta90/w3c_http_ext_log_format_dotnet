@@ -36,7 +36,9 @@ namespace netcore
                 ResponseStream = new CountingStream(httpContext.Response.Body),
                 StartDate = DateTimeOffset.Now.ToString("d/MMM/yyyy:H:m:s zzz"),
                 RemoteHost = httpContext.Connection.RemoteIpAddress.ToString(),
+                LocalIpAddress = httpContext.Connection.LocalIpAddress.ToString(),
                 Method = httpContext.Request.Method,
+                Path = httpContext.Request.Path,
                 RequestLine = $"{httpContext.Request.Method} {rawTarget} {httpContext.Request.Protocol}",
             };
 
@@ -75,7 +77,8 @@ namespace netcore
         {
             var state = (LogState)arg;
             state.Bytes = state.ResponseStream.BytesWritten;
-            state.TransactionCompleteDate = DateTimeOffset.Now.ToString("yyyy-MM-dd");
+            state.TransactionCompleteDate = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
+            state.TransactionCompleteTime = DateTimeOffset.UtcNow.ToString("HH:mm:ss");
 
             WriteLog(state);
             return Task.CompletedTask;
@@ -84,7 +87,7 @@ namespace netcore
         private void WriteLog(LogState state)
         {
             // TODO: Date formating
-            Logger.LogInformation($"{state.RemoteHost} {state.TransactionCompleteDate} {state.Method} {state.Rfc931} {state.AuthUser} [{state.StartDate}] \"{state.RequestLine}\" {state.StatusCode} {state.Bytes}");
+            Logger.LogInformation($"{state.TransactionCompleteDate} {state.TransactionCompleteTime} - - {state.LocalIpAddress} {state.Method} {state.Path} - {state.RemoteHost}  - -  {state.AuthUser} [{state.StartDate}] \"{state.RequestLine}\" {state.StatusCode} {state.Bytes}");
         }
 
         private class LogState
@@ -97,6 +100,8 @@ namespace netcore
             // Method, field has type <name>
             public string Method { get; set; }
             public string RemoteHost { get; set; } 
+            public string Path { get; set; } 
+            public string LocalIpAddress { get; set; } 
             public string Rfc931 { get; set; } = "Rfc931"; // ??
             public string AuthUser { get; set; }
             public string StartDate { get; set; }
