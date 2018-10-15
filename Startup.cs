@@ -27,7 +27,7 @@ namespace netcore
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-                        app.UseCommonLogging();
+            app.UseExtendedLogFileFormat();
             var routeBuilder = new RouteBuilder(app);
             routeBuilder.MapGet("api/values/{id}", context =>{
                 return context.Response.WriteAsync("value");
